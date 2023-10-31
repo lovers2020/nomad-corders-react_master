@@ -12,9 +12,8 @@ function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route>
-          <Coins />
-        </Route>
+        <Route path="/:coinId" element={<Coin />}></Route>
+        <Route path="/" element={<Coins />}></Route>
       </Routes>
     </BrowserRouter>
   );
