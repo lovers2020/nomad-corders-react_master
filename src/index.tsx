@@ -6,6 +6,7 @@ import "./index.css";
 import { theme } from "./theme";
 import reset from "styled-reset";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const GlobalStyle = createGlobalStyle`
 ${reset}
@@ -27,13 +28,14 @@ body {
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
-const client = new QueryClient();
+const queryClient = new QueryClient();
 root.render(
   <>
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <App />
+        <ReactQueryDevtools initialIsOpen={true} />
       </ThemeProvider>
     </QueryClientProvider>
   </>
