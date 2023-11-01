@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { Link, useMatch } from "react-router-dom";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -133,9 +134,9 @@ interface RouteParams {
   coinId: string;
 }
 function Coin() {
-  const [loading, setLoading] = useState(true);
   const { coinId } = useParams() as unknown as RouteParams;
   const { state } = useLocation() as RouterState;
+  const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState<InfoData>();
   const [priceInfo, setPriceInfo] = useState<PriceData>();
   const priceMatch = useMatch("/:coinId/price");
