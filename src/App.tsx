@@ -1,12 +1,38 @@
 import React from "react";
 import "./App.css";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
-import Router from "./routes/Router";
-import { Outlet } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Coins from "./routes/Coins";
+import Price from "./routes/Price";
+import Chart from "./routes/Chart";
+import Coin from "./routes/Coin";
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Coins />,
+  },
+  {
+    path: "/:coinId",
+    element: <Coin />,
+    children: [
+      {
+        path: "chart",
+        element: <Chart />,
+      },
+      {
+        path: "price",
+        element: <Price />,
+      },
+    ],
+  },
+]);
 function App() {
-  return <Router />;
+  return (
+    <>
+      <RouterProvider router={router} />
+    </>
+  );
 }
 
 export default App;

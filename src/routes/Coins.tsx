@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -27,6 +27,7 @@ const Coin = styled.li`
   a {
     padding: 20px;
     display: block;
+    width: 100%;
     transition: color 0.2s ease-in;
   }
   &:hover {
@@ -90,6 +91,7 @@ function Coins() {
           ))}
         </CoinList>
       )}
+      <Outlet></Outlet>
     </Container>
   );
 }
