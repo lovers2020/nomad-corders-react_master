@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { Link, useMatch } from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinTickers } from "./api";
 import { useQuery } from "react-query";
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -18,6 +17,16 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+`;
+const BackBtn = styled.button`
+  font-size: 32px;
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  left: 0;
+  color: ${(props) => props.theme.accentColor};
+  cursor: pointer;
 `;
 const Title = styled.h1`
   font-size: 48px;
@@ -140,6 +149,7 @@ function Coin() {
   const { state } = useLocation() as RouterState;
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
+  const navigator = useNavigate();
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
     ["info", coinId],
     () => fetchCoinInfo(coinId)
@@ -147,6 +157,9 @@ function Coin() {
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
     ["tickers", coinId],
     () => fetchCoinTickers(coinId)
+    // {
+    //   refetchInterval: 5000,
+    // }
   );
   // const [loading, setLoading] = useState(true);
   // const [info, setInfo] = useState<InfoData>();
@@ -168,8 +181,14 @@ function Coin() {
   const loading = infoLoading || tickersLoading;
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </title>
+      </Helmet>
       <Header>
         <Title>
+          <BackBtn onClick={() => navigator(-1)}>&larr;</BackBtn>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
@@ -187,8 +206,8 @@ function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price</span>
+              <span>${tickersData?.quotes.USD.price.toFixed(2)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -204,10 +223,14 @@ function Coin() {
           </Overview>
           <Tabs>
             <Tab isActive={chartMatch !== null}>
-              <Link to={`/${coinId}/chart`}>Chart</Link>
+              <Link to={`/${coinId}/chart`} state={{ coinId }}>
+                Chart
+              </Link>
             </Tab>
             <Tab isActive={priceMatch !== null}>
-              <Link to={`/${coinId}/price`}>Price</Link>
+              <Link to={`/${coinId}/price`} state={{ coinId }}>
+                Price
+              </Link>
             </Tab>
           </Tabs>
           <Outlet></Outlet>
