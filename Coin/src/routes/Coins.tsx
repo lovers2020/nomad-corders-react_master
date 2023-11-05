@@ -40,11 +40,9 @@ const Coin = styled.li`
   }
 `;
 const Title = styled.h1`
-  position: relative;
   font-size: 48px;
   color: ${(props) => props.theme.accentColor};
 `;
-
 const Loader = styled.span`
   font-size: 32px;
   color: ${(props) => props.theme.textColor};
@@ -55,7 +53,6 @@ const Img = styled.img`
   width: 32px;
   height: 32px;
 `;
-
 interface ICoin {
   id: string;
   name: string;
@@ -90,19 +87,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>Coin</Title>
-        <button
-          onClick={toggleDark}
-          style={{
-            textAlign: "center",
-            backgroundColor: "transparent",
-            outline: "none",
-            border: "1px solid rgba(0,0,0,0.1)",
-            borderRadius: "10px",
-            cursor: "pointer",
-          }}
-        >
-          Toggle Dark Mode
-        </button>
+        <button onClick={toggleDark}>Toggle Dark Mode</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>

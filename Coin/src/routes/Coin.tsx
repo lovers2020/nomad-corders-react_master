@@ -19,18 +19,21 @@ const Header = styled.header`
   color: ${(props) => props.theme.accentColor};
   margin: 20px 0px;
   font-size: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
 `;
 const BackBtn = styled.button`
   font-size: 32px;
   background-color: transparent;
   border: none;
+  position: absolute;
+  left: 0;
   color: ${(props) => props.theme.accentColor};
   cursor: pointer;
 `;
 const Title = styled.h1`
-  display: flex;
-  justify-content: space-between;
   font-size: 48px;
   color: ${(props) => props.theme.accentColor};
 `;
@@ -60,7 +63,7 @@ const OverviewItem = styled.div`
 `;
 const Description = styled.p`
   margin: 20px 0px;
-  color: ${(props) => props.theme.textColor};
+  color: rgba(255, 255, 255, 0.3);
 `;
 const Tabs = styled.div`
   display: grid;
@@ -147,14 +150,13 @@ interface RouteParams {
   coinId: string;
 }
 interface ToggleDarkMode {
-  toggleDark: () => void;
   isDark: boolean;
 }
 
 function Coin() {
   const { coinId } = useParams() as unknown as RouteParams;
   const { state } = useLocation() as RouterState;
-  const { toggleDark, isDark } = useOutletContext<ToggleDarkMode>();
+  const { isDark } = useOutletContext<ToggleDarkMode>();
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
   const navigator = useNavigate();
@@ -198,17 +200,6 @@ function Coin() {
         <Title>
           <BackBtn onClick={() => navigator(-1)}>&larr;</BackBtn>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
-          <button
-            onClick={toggleDark}
-            style={{
-              fontSize: "10px",
-              border: "1px solid rgba(0,0,0,0.2)",
-              cursor: "pointer",
-              borderRadius: "10px",
-            }}
-          >
-            Toggle Dark Mode
-          </button>
         </Title>
       </Header>
       {loading ? (
