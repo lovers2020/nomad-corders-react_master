@@ -10,9 +10,10 @@ export function ToDo({ text, category, id }: IToDo) {
     } = event;
     setToDos((oldToDos) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
-      const oldToDo = oldToDos[targetIndex];
-      const newToDo = { text, id, category: name };
-      return oldToDos;
+      const newToDo = { text, id, category: name as IToDo["category"] };
+      const newToDos = [...oldToDos];
+      newToDos.splice(targetIndex, 1, newToDo);
+      return newToDos;
     });
   };
   return (
