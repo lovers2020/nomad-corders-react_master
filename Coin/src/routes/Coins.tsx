@@ -1,9 +1,10 @@
-import { useState } from "react";
 import { useQuery } from "react-query";
-import { Link, Outlet, useOutletContext } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "./api";
 import { Helmet } from "react-helmet";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -17,6 +18,7 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 const CoinList = styled.ul``;
 const Coin = styled.li`
@@ -43,6 +45,7 @@ const Title = styled.h1`
   font-size: 48px;
   color: ${(props) => props.theme.accentColor};
 `;
+
 const Loader = styled.span`
   font-size: 32px;
   color: ${(props) => props.theme.textColor};
@@ -53,6 +56,7 @@ const Img = styled.img`
   width: 32px;
   height: 32px;
 `;
+
 interface ICoin {
   id: string;
   name: string;
@@ -63,12 +67,10 @@ interface ICoin {
   type: string;
 }
 
-interface ToggleDarkMode {
-  toggleDark: () => void;
-}
 function Coins() {
-  const { toggleDark } = useOutletContext<ToggleDarkMode>();
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
 
   // const [coins, setCoins] = useState<CoinInterface[]>([]);
   // const [loading, setLoading] = useState(true);
@@ -87,7 +89,18 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>Coin</Title>
-        <button onClick={toggleDark}>Toggle Dark Mode</button>
+        <button
+          onClick={toggleDarkAtom}
+          style={{
+            position: "absolute",
+            right: 0,
+            border: "1px solid rgba(0,0,0,0.2)",
+            cursor: "pointer",
+            borderRadius: "10px",
+          }}
+        >
+          Toggle Dark Mode
+        </button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>

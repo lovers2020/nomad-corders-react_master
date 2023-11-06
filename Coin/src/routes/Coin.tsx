@@ -1,14 +1,11 @@
-import {
-  Link,
-  useMatch,
-  useNavigate,
-  useOutletContext,
-} from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinTickers } from "./api";
 import { useQuery } from "react-query";
 import { Helmet } from "react-helmet";
+import { isDarkAtom } from "../atoms";
+import { useSetRecoilState } from "recoil";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -19,21 +16,18 @@ const Header = styled.header`
   color: ${(props) => props.theme.accentColor};
   margin: 20px 0px;
   font-size: 48px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
 `;
 const BackBtn = styled.button`
   font-size: 32px;
   background-color: transparent;
   border: none;
-  position: absolute;
-  left: 0;
   color: ${(props) => props.theme.accentColor};
   cursor: pointer;
 `;
 const Title = styled.h1`
+  display: flex;
+  justify-content: space-between;
   font-size: 48px;
   color: ${(props) => props.theme.accentColor};
 `;
@@ -63,7 +57,7 @@ const OverviewItem = styled.div`
 `;
 const Description = styled.p`
   margin: 20px 0px;
-  color: rgba(255, 255, 255, 0.3);
+  color: ${(props) => props.theme.textColor};
 `;
 const Tabs = styled.div`
   display: grid;
@@ -149,14 +143,13 @@ interface PriceData {
 interface RouteParams {
   coinId: string;
 }
-interface ToggleDarkMode {
-  isDark: boolean;
-}
 
 function Coin() {
   const { coinId } = useParams() as unknown as RouteParams;
   const { state } = useLocation() as RouterState;
-  const { isDark } = useOutletContext<ToggleDarkMode>();
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
   const navigator = useNavigate();
@@ -200,6 +193,17 @@ function Coin() {
         <Title>
           <BackBtn onClick={() => navigator(-1)}>&larr;</BackBtn>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+          <button
+            onClick={toggleDarkAtom}
+            style={{
+              fontSize: "10px",
+              border: "1px solid rgba(0,0,0,0.2)",
+              cursor: "pointer",
+              borderRadius: "10px",
+            }}
+          >
+            Toggle Dark Mode
+          </button>
         </Title>
       </Header>
       {loading ? (
@@ -243,7 +247,7 @@ function Coin() {
               </Link>
             </Tab>
           </Tabs>
-          <Outlet context={{ isDark }}></Outlet>
+          <Outlet></Outlet>
         </>
       )}
     </Container>

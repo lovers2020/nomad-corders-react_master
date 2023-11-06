@@ -1,13 +1,16 @@
-import { useState } from "react";
-import "./App.css";
-import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { Outlet } from "react-router-dom";
-import { darkTheme, lightTheme } from "./theme";
+import { useRecoilValue } from "recoil";
 import reset from "styled-reset";
 
 const GlobalStyle = createGlobalStyle`
 ${reset}
-body {
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   font-size: 16px;
   font-family: 'Noto Sans';
   background-color: ${(props) => props.theme.bgColor};
@@ -24,14 +27,10 @@ body {
 `;
 
 function App() {
-  const [isDark, setIsDark] = useState(false);
-  const toggleDark = () => setIsDark((current) => !current);
   return (
     <>
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <GlobalStyle />
-        <Outlet context={{ toggleDark, isDark }} />
-      </ThemeProvider>
+      <GlobalStyle />
+      <Outlet />
     </>
   );
 }
